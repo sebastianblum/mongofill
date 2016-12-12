@@ -522,7 +522,8 @@ class MongoCollection
         }
 
         if (isset($options['w'])) {
-            $insertOptions['w'] = $options['w'];
+            //$insertOptions['w'] = $options['w'];
+            unset($options['w']);
         }
 
         if (isset($options['fsync'])) {
