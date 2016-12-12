@@ -1,6 +1,6 @@
 {
-    "name": "mongofill/mongofill",
-    "description": "Polyfill of PECL Mongo extension",
+    "name": "sebastianblum/mongofill",
+    "description": "Polyfill of PECL Mongo extension - patched for MongoDB 2.8",
     "minimum-stability": "stable",
     "license": "MIT",
     "authors": [
