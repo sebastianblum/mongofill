@@ -339,8 +339,10 @@ class MongoClient
         $all_hosts = array_merge($replset_hosts, $replset_passive_hosts);
         foreach ($all_hosts as $host_str) {
             $host_parts = $this->parseHostString($host_str);
-            if ($host_str === $is_master['primary']) {
+            if (array_key_exists('primary', $is_master) && $host_str === $is_master['primary']) {
                 $host_parts['state'] = static::STATE_PRIMARY;
+            } elseif (array_key_exists('secondary', $is_master) && 1 == $is_master['secondary']) {
+                $host_parts['state'] = static::STATE_SECONDARY;
             } else {
                 $host_parts['state'] = static::STATE_STARTUP;
             }
@@ -427,6 +429,15 @@ class MongoClient
 
         foreach ($this->hosts as $host_info) {
             if (isset($host_info['state']) && $host_info['state'] === static::STATE_PRIMARY) {
+                $this->primaryProtocol = $this->connectToHost($host_info['host'], $host_info['port']);
+                return $this->primaryProtocol;
+            }
+        }
+
+        // FALLBACK solution
+        // if master is down, use secondary to keep the website online
+        foreach ($this->hosts as $host_info) {
+            if (isset($host_info['state']) && $host_info['state'] === static::STATE_SECONDARY) {
                 $this->primaryProtocol = $this->connectToHost($host_info['host'], $host_info['port']);
                 return $this->primaryProtocol;
             }
