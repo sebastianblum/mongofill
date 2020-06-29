@@ -168,7 +168,7 @@ class Bson
 
     private static function decElement($data, &$offset)
     {
-        $sig = ord($data{$offset});
+        $sig = ord($data[$offset]);
         $offset++;
         $name = Util::parseCString($data, $offset);
 
@@ -298,7 +298,7 @@ class Bson
         $document = [];
         $parsedLen = 0;
 
-        while (0 !== ord($data{$offset})) {
+        while (0 !== ord($data[$offset])) {
             $elmLen = $offset;
             $elm = self::decElement($data, $offset);
             $parsedLen += ($offset - $elmLen);
